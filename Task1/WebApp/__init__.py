@@ -10,11 +10,13 @@ import plotly.express as px
 # Define the app
 from Task1.WebApp.PSqlQuery import PSqlQuery
 
-app = dash.Dash('')
+query = PSqlQuery("178.22.68.101", 5434, "auto", "candidato", "crossnova20")
+
+app = dash.Dash(__name__)
 server = app.server
 app.config.suppress_callback_exceptions = False
 app.scripts.config.serve_locally = True
-
+columns = (query.get_table_columns())
 
 class DashCallbackVariables:
     """Class to store information useful to callbacks"""
@@ -32,14 +34,14 @@ def get_page_html():
         html.Div(
             [dcc.Dropdown(
                 id='column1Drop',
-                options=[{'label': 'column1Name', 'value': 'acceleration'}],
+                options=[{'label': i, 'value': i} for i in columns],
                 placeholder="Select Column 1 Name(will be the y index)",
             )
             ], style={'width': '48%', 'display': 'inline-block'}),
         html.Div(
             [dcc.Dropdown(
                 id='column2Drop',
-                options=[{'label': 'column2Name', 'value': 'mpg'}],
+                options=[{'label': i, 'value': i} for i in columns],
                 placeholder="Select Column 2 Name(will be the y index)",
             )
             ], style={'width': '48%', 'display': 'inline-block'}),
@@ -75,7 +77,7 @@ app.layout = root_layout
 def example_graph_callback(value, col1, col2):
     if col1 is None or col2 is None:
         return get_empty_graph_html()
-    query = PSqlQuery("178.22.68.101", 5434, "auto", "candidato", "crossnova20")
+
     lst = query.get_2_numerical_columns(col1, col2)
     df = pd.DataFrame(lst)
     keys = []

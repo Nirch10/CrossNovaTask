@@ -6,11 +6,17 @@ class DbQuery(object):
         self.db_password = db_password
         self.db_ip = db_ip
 
-    def get_2_numerical_columns(self, column_1: str, column_2: str) -> list:
+    def get_2_numerical_columns(self, column_1: str, column_2: str) -> dict:
         """
         :param column_2: str => column_2 name
         :type column_1: str => column_1 name
         :rtype: List containing 2 lists : one for each column's results
+        """
+        pass
+
+    def get_table_columns(self) -> list:
+        """
+            @:returns list => returns a list of columns names the table has
         """
         pass
 
