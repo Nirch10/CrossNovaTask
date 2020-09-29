@@ -10,30 +10,38 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
 
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+class Server:
+    def __init__(self):
+        self.df = []
+        self.fig = None
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+    def start(self):
+        app.layout = html.Div(children=[
+            html.H1(children='Hello Dash'),
 
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
+            html.Div(children='''
+                    Dash: A web application framework for Python.
+                '''),
 
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    )
-])
+            dcc.Graph(
+                id='example-graph',
+                figure=self.fig
+            )
+        ])
+        app.run_server(debug=True)
+
+    def update_data(self, values_to_show: dict) -> None:
+        self.df = pd.DataFrame(values_to_show)
+        keys = []
+        for key in values_to_show:
+            keys.append(key)
+        self.fig = px.bar(self.df, x=keys[0], y=keys[1], barmode="group");
+
 
 if __name__ == '__main__':
     query = PSqlQuery("178.22.68.101", 5434, "auto", "candidato", "crossnova20")
-    query.get_2_numerical_columns("acceleration", "acceleration")
-    app.run_server(debug=True)
+    lst = query.get_2_numerical_columns("acceleration", "mpg")
+    server = Server()
+    server.update_data(lst)
+    server.start()
