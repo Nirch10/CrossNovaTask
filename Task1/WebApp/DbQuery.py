@@ -1,5 +1,6 @@
 class DbQuery(object):
-    def __init__(self, db_ip: str, db_port: int, db_user: str, db_password: str) -> object:
+    def __init__(self, db_ip: str, db_port: int, db_name: str, db_user: str, db_password: str) -> object:
+        self.db_name = db_name
         self.db_user = db_user
         self.db_port = db_port
         self.db_password = db_password
@@ -12,3 +13,4 @@ class DbQuery(object):
         :rtype: List containing 2 lists : one for each column's results
         """
         pass
+
