@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from Task1.WebApp.DbQuery import DbQuery
 import psycopg2
 
@@ -17,28 +19,28 @@ class PSqlQuery(DbQuery):
         results[column_1] = []
         results[column_2] = []
         for rec in records:
-            results[column_1].append(rec[0])
-            results[column_2].append(rec[0])
+            if isinstance(rec[0], (Decimal, float)) and isinstance(rec[1], (Decimal, float)):
+                results[column_1].append(rec[0])
+                results[column_2].append(rec[1])
         return results
 
-    def get_table_columns(self, accepted_types: list) -> list:
+    def get_table_columns(self, accepted_col_types: list) -> list:
         """
-
+        :param accepted_col_types: list of accepted types to show from table columns
         :return:List of filtered columns
         """
-        in_list_query_str = self.__get_str_from_types(accepted_types)
-        connection = self.__connect_db()
-        if connection is None:
-            return []
-        cursor = connection.cursor()
-        cursor.execute(
-            "SELECT column_name FROM information_schema.columns cols WHERE cols.data_type in (" + in_list_query_str + ") ")
-        # cursor.execute("SELECT table_name, column_name FROM information_schema.columns cols WHERE cols.data_type in ("+in_list_query_str+") ")
-        results = cursor.fetchall()
-        columns = []
-        for result in results:
-            columns.append(result[0])
-        return columns
+        try:
+            in_list_query_str = self.__get_str_from_types(accepted_col_types)
+            connection = self.__connect_db()
+            if connection is None:
+                return []
+            cursor = connection.cursor()
+            if len(accepted_col_types) > 0:
+                return self.__get_columns_by_condition(in_list_query_str, cursor)
+            return self.__get_all_columns(cursor)
+
+        except Exception:
+            return [];
 
     def __connect_db(self):
         try:
@@ -49,6 +51,37 @@ class PSqlQuery(DbQuery):
             return connection
         except Exception:
             return None
+
+    @staticmethod
+    def __get_all_columns(cursor) -> list:
+        """
+        :param cursor:cursor which holds the connection to db
+        :return: a list with all table columns
+        """
+        cursor.execute("SELECT * from public.auto where false")
+        query_response_list = cursor.description
+        columns = []
+        for result in query_response_list:
+            columns.append(result.name)
+        return columns
+
+    @staticmethod
+    def __get_columns_by_condition(accepted_columns_str: str, cursor) -> list:
+        """
+
+        :param accepted_columns_str: list of accepted types to show from table columns
+        :param cursor: cursor which holds the connection to db
+        :return: a list with all table columns whose type are in the accepted_columns
+        """
+        where_clause = "WHERE cols.data_type in (" + accepted_columns_str + ")"
+
+        cursor.execute(
+            "SELECT column_name FROM information_schema.columns cols" + where_clause)
+        query_response_list = cursor.fetchall()
+        columns = []
+        for result in query_response_list:
+            columns.append(result[0])
+        return columns
 
     def __get_str_from_types(self, types_list: list) -> str:
         list_as_strings = ''

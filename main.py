@@ -8,7 +8,8 @@ def get_config_path() -> str:
     """
     :return: Config.json file path
     """
-    return os.path.realpath('./Task1/AppConfig/Config.json')
+    # return os.path.realpath('./AppConfig/Config.json')  # locally
+    return os.path.realpath('./Task1/AppConfig/Config.json') # On Docker Compose
 
 
 if __name__ == '__main__':
