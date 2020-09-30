@@ -14,7 +14,7 @@ class DbQuery(object):
         """
         pass
 
-    def get_table_columns(self) -> list:
+    def get_table_columns(self, accepted_col_types: list) -> list:
         """
             @:returns list => returns a list of columns names the table has
         """

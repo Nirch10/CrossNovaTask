@@ -8,8 +8,7 @@ import plotly.express as px
 from Task1.AppConfig.Config import Config
 from Task1.WebApp.PSqlQuery import PSqlQuery
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 
 
 class Server:
@@ -18,7 +17,7 @@ class Server:
         self.fig = None
         self.ip = ip
 
-    def start(self, dropdown_list: list):
+    def start(self, dropdown_list: list) -> None:
         app.layout = html.Div(
             id='main_page',
             children=self.__get_page_html(dropdown_list)
@@ -44,7 +43,7 @@ class Server:
                 [dcc.Dropdown(
                     id='column1Drop',
                     options=[{'label': i, 'value': i} for i in dropdown_data],
-                    placeholder="Select Column 1 Name(will be the y index)",
+                    placeholder="Select Column 1 Name(will be the x index)",
                 )
                 ], style={'width': '48%', 'display': 'inline-block'}),
             html.Div(
@@ -108,6 +107,6 @@ def start_web_app(app_config: Config):
     global server
     query = PSqlQuery(app_config.dbHost, app_config.dbPort, app_config.dbTable, app_config.dbUserName,
                       app_config.dbPassword)
-    lst = query.get_table_columns(['numeric'])
+    columns_list = query.get_table_columns([])
     server = Server(app_config.appIp, app_config.appPort)
-    server.start(lst)
+    server.start(columns_list)

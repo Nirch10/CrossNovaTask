@@ -41,18 +41,18 @@ def set_graph_y(start, length, multiplier) -> list:
     y_indexes = []
     half_range = int(length / 2)
     to_add = start + half_range / length ** 2
-    for i in range(half_range):
-        if i % 2 == 0:
+    for index in range(half_range):
+        if index % 2 == 0:
             y_indexes.append(to_add)
         else:
             y_indexes.append(to_add * -1)
-        to_add = to_add + (half_range - i) / length ** 2 * multiplier
-    for i in range(half_range, 0, -1):
-        if i % 2 == 0:
+        to_add = to_add + (half_range - index) / length ** 2 * multiplier
+    for index in range(half_range, 0, -1):
+        if index % 2 == 0:
             y_indexes.append(to_add)
         else:
             y_indexes.append(to_add * -1)
-        to_add = to_add - (half_range - i) / length ** 2 * multiplier
+        to_add = to_add - (half_range - index) / length ** 2 * multiplier
     return y_indexes
 
 
