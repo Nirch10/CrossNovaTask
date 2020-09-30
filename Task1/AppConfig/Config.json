@@ -1,0 +1,14 @@
+{
+  "DBConfig": {
+    "host": "178.22.68.101",
+    "port": 5434,
+    "tableName": "auto",
+    "userName": "candidato",
+    "password": "crossnova20"
+  },
+  "WebAppConfig":{
+    "ip": "localhost",
+    "port": 6060
+  }
+
+}
