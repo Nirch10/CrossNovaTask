@@ -105,7 +105,8 @@ def example_graph_callback(value, col1, col2):
 def start_web_app(app_config: Config):
     global query
     global server
-    query = PSqlQuery(app_config.dbHost, app_config.dbPort, app_config.dbTable, app_config.dbUserName, app_config.dbPassword)
+    query = PSqlQuery(app_config.dbHost, app_config.dbPort, app_config.dbTable, app_config.dbUserName,
+                      app_config.dbPassword)
     lst = query.get_table_columns(['numeric'])
     server = Server()
     server.start(lst)
