@@ -7,8 +7,8 @@
     "password": "crossnova20"
   },
   "WebAppConfig":{
-    "ip": "localhost",
-    "port": 6060
+    "ip": "172.18.0.2",
+    "port": 8050
   }
 
 }

@@ -13,16 +13,17 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
 class Server:
-    def __init__(self):
+    def __init__(self, ip: str, port: int):
         self.df = []
         self.fig = None
+        self.ip = ip
 
     def start(self, dropdown_list: list):
         app.layout = html.Div(
             id='main_page',
             children=self.__get_page_html(dropdown_list)
         )
-        app.run_server(debug=True)
+        app.run_server(debug=True, host=self.ip)
 
     def update_graph_data(self, values_to_show: dict) -> None:
         self.df = pd.DataFrame(values_to_show)
@@ -108,5 +109,5 @@ def start_web_app(app_config: Config):
     query = PSqlQuery(app_config.dbHost, app_config.dbPort, app_config.dbTable, app_config.dbUserName,
                       app_config.dbPassword)
     lst = query.get_table_columns(['numeric'])
-    server = Server()
+    server = Server(app_config.appIp, app_config.appPort)
     server.start(lst)
