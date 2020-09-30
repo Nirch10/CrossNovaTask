@@ -6,7 +6,7 @@ services:
     image: app-name
     container_name: app-name
     ports:
-      - 8050:8050
+      - "127.0.0.01:8050:8050"
     environment:
       - TARGET=$TARGET
     restart: unless-stopped
